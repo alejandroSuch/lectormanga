@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="apple-touch-startup-image" href="/img/startup.jpg">
+<title>:: Lector manga - <%=request.getAttribute('name') %> <%=request.getAttribute('chapter') %> ::</title>
+<link href="/css/photoswipe.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/bootstrap.css">
+<script type="text/javascript" src="/js/klass.min.js"></script>
+<script type="text/javascript" src="/js/code.photoswipe-2.1.6.min.js"></script>
+<script type="text/javascript">
+
+		(function(window, PhotoSwipe){
+
+			document.addEventListener('DOMContentLoaded', function(){
+
+				var
+					options = {
+						preventHide: true,
+					},
+					instance = PhotoSwipe.attach( window.document.querySelectorAll('#Gallery a'), options );
+				
+				instance.show(0);
+
+			}, false);
+
+
+		}(window, window.Code.PhotoSwipe));
+
+	</script>
+</head>
+<body>
+	<div id="MainContent">
+		<ul id="Gallery" class="gallery">
+			<% request.getAttribute("images").eachWithIndex{ it, i -> %>
+			<li><a href="<%=it%>"><img src="<%=it%>"
+					alt="<%=request.getAttribute("name")+" "+request.getAttribute("chapter")+". P&aacute;gina "+(i+1) + " de " + request.getAttribute('images').size()%>"></a></li>
+			<% } %>
+		</ul>
+	</div>
+
+</div>
+</body>
+</html>
