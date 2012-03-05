@@ -23,20 +23,8 @@
     	var startTime = 0;
     	var endTime = 0;
     	var img;
-
-    	/*var addImage = function(){
-		var img = new Image();
-		img.src = baseUrl + i + ".jpg";
-		img.onerror = function(){
-		};
-
-		img.onload = function(){
-			var imgUrl = baseUrl+i+'.jpg';
-
-			i++;
-			addImage();
-		};
-		};*/
+    	var minDistance = 5;
+    	var positionsList = new Array();
     	
 
     	var loadImages = function(){
@@ -144,6 +132,10 @@
 		            	context.drawImage(images[i].image, images[i].lastX, (canvas.height-images[i].height)/2, images[i].width, images[i].height);
 	            	}
 	            	lastX = offsetX;
+	            	positionsList.push({x:lastX, time:new Date()});
+	            	if (positionsList.length > 2) {
+	            		positionsList.shift();
+	                }
 	            }
         };
 
@@ -179,21 +171,59 @@
         };
 
         var calculateCurrentImage = function(){
-            for(i in images){
-                if(currentImage != i && Math.abs(images[i].lastX+images[i].width/2 - canvas.width/2) <= Math.abs(images[currentImage].lastX - canvas.width/2)){
-                    currentImage = i;
-                    document.title = ':: Lector manga - <%=request.getAttribute('name') %> <%=request.getAttribute('chapter') %>. Pagina '+(parseInt(i)+1)+' de '+images.length+' ::';
-                    //window.history.pushState({}, "Pagina" + (i+1), images[i].image.src);
-                }
-            }
+        	var easing = false;
+			var x1 = 0;
+			var x0 = 0;
+			if(positionsList.length >=2){
+				//x, time
+				x1 = positionsList[1].x;
+				x0 = positionsList[0].x;
+				var dX = x1 - x0;
+				var dMs = Math.max(positionsList[1].time - positionsList[0].time, 1);
+				var speedX = Math.max(Math.min(dX/dMs, 1), -1);
+
+				var distance = Math.sqrt(Math.pow(positionsList[0].x - positionsList[1].x, 2));
+				//console.log('distance', distance, 'from', x0, 'to', x1)
+				if(distance > minDistance){
+					easing=true;
+				}
+			}
+
+			if(easing){
+				if(dX > 0){
+					if(currentImage > 0){
+						currentImage--;
+						//console.log('avance de p‡gina')
+					}
+				} else {
+					if(currentImage < images.length-1){
+						currentImage++;
+					//	console.log('retroceso de p‡gina')
+					}
+				}
+
+				//console.log('current', currentImage)
+
+				positionsList = new Array();
+				
+			} else {
+				for(i in images){
+	                if(currentImage != i && Math.abs(images[i].lastX+images[i].width/2 - canvas.width/2) <= Math.abs(images[currentImage].lastX - canvas.width/2)){
+	                    currentImage = i;
+	                    //window.history.pushState({}, "Pagina" + (i+1), images[i].image.src);
+	                }
+	            }
+			}
+
+			document.title = ':: Lector manga - <%=request.getAttribute('name') %> <%=request.getAttribute('chapter') %>. Pagina '+(parseInt(currentImage)+1)+' de '+images.length+' ::';
         };
 
         var goToCurrent = function(){
         	var interval = setInterval(
 					function(){
 						var distance = (canvas.width-images[currentImage].width)/2 - images[currentImage].lastX;
-						clearCanvas();
 
+						clearCanvas();
 						for(i in images){
 							images[i].lastX = images[i].lastX + distance / 2;
 							context.drawImage(images[i].image, images[i].lastX, (canvas.height-images[i].height)/2, images[i].width, images[i].height);
@@ -251,13 +281,13 @@
 			});
 
 			\$("#readingZone").bind('touchmove', function(event){
+				event.preventDefault();
 				if(dragging){
 					if((event.originalEvent.touches && event.originalEvent.touches.length >= 1) || (event.originalEvent.changedTouches && event.originalEvent.changedTouches.length >= 1)){ // Only deal with one finger
 						var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0]; // Get the information for finger #1
 						clearCanvas();
 						calculateCurrentImage();
 						drawCurrentImage(touch.clientX);
-						console.log(touch.clientX+','+touch.clientY);
 					}
 				}
 			});
@@ -326,10 +356,16 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+#container{
+	width:100%;
+	heoght:100%;
+}
     </style>
   </head>
 
   <body>
+  <div id="container" ontouchmove="function(event) {event.preventDefault(); } ">
     <canvas id="readingZone" width="640" height="480"></canvas>
+    </div>
   </body>
 </html>
