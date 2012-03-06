@@ -4,6 +4,17 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="apple-touch-startup-image" href="/img/startup.jpg">
 <title>:: Lector manga - <%=request.getAttribute('name') %> <%=request.getAttribute('chapter') %> ::</title>
+    <script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-29763989-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
 <link href="/css/photoswipe.css" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="/css/bootstrap.css">
 <script type="text/javascript" src="/js/klass.min.js"></script>

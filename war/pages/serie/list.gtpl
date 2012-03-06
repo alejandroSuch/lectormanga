@@ -3,6 +3,17 @@
 <head>
 	<title>:: Lector de mangas - <%=request.getAttribute('name')%> ::</title>
 	<link rel="stylesheet" href="/css/bootstrap.css">
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-29763989-1']);
+	  _gaq.push(['_trackPageview', '/<%=request.getAttribute('name')%>']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
 </head>
 <body>
 	<div class="topbar">
