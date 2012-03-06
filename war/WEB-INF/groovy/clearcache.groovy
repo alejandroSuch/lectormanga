@@ -1,0 +1,3 @@
+//memcache.clearAll()
+
+redirect '/'
