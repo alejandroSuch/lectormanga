@@ -86,7 +86,9 @@ def getImages2(String url){
 def getFirstImage(url){
 	def list = []
 	def html = slurp url
-	def style = html.body.div[0].div[0].div[3].div[1].div[1].div[0].div[0].@style.text()
+	//def style = html.body.div[0].div[0].div[3].div[1].div[1].div[0].div[0].@style.text()
+	
+	def style = html.body.div[0].div[2].div[1].div[0].div[0].@style.text()
 	
 	(style =~ /.*(http.*jpg).*/)[0][1]
 }
